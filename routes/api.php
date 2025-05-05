@@ -4,14 +4,18 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/tasks', [TaskController::class, 'store']);
-    Route::get('/tasks', [TaskController::class, 'index']);
-    Route::put('/tasks/{task}', [TaskController::class, 'completeTask']);
-    Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
+
+Route::middleware('auth:sanctum')->prefix('task')->group(function () {
+    Route::post('/', [TaskController::class, 'store']);
+    Route::get('/', [TaskController::class, 'index']);
+    Route::put('/{task_id}', [TaskController::class, 'completeTask']);
+    Route::delete('/{task_id}', [TaskController::class, 'destroy']);
+    Route::get('/{task_id}', [TaskController::class, 'show']);
 });
 
-Route::get('/users', [ProfileController::class, 'index']);
-
-Route::post('/login', [AuthController::class, 'login']);
+Route::middleware('guest')->group(function () {
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/register', [RegisteredUserController::class, 'store']);
+});

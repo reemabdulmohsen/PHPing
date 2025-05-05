@@ -6,7 +6,7 @@ use App\Http\Requests\StoreTaskRequest;
 use App\Models\Task;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-
+use App\Http\Resources\TaskResource;
 class TaskController extends Controller
 {
     use AuthorizesRequests;
@@ -17,7 +17,7 @@ class TaskController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $tasks = Task::where('user_id', $user->id)->get();
+        $tasks = Task::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
         return response()->json(['tasks' => $tasks], 200);
     }
 
@@ -29,24 +29,25 @@ class TaskController extends Controller
        
         $user = $request->user();
         $task = $user->tasks()->create($request->validated());
-        return response()->json(['task' => $task], 201);
+        return response()->json(['task' => new TaskResource($task)]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Task $task)
+    public function show($task_id)
     {
+        $task = Task::find($task_id);
         $this->authorize('view', $task);
-        $task = Task::find($task->id);
-        return response()->json(['task' => $task], 200);
+        return response()->json(['task' => new TaskResource($task)]);
     }
 
     /**
      * Mark the specified task as completed or not completed.
      */
-    public function completeTask(Task $task)
+    public function completeTask($task_id)
     {
+        $task = Task::find($task_id);
         $this->authorize('update', $task);
         $was_completed = $task->is_completed;
 
@@ -58,24 +59,18 @@ class TaskController extends Controller
             $task->is_completed = true;
         }
         $task->save();
-        return response()->json(['task' => $task], 200);
+        return response()->json(['task' => new TaskResource($task)]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Task $task)
+    public function destroy($task_id)
     {
+        $task = Task::find($task_id);
         $this->authorize('delete', $task);
         $task->delete();
     }
 
-    protected function validateTask(Task $task)
-    {
-        return request()->validate([
-            'name' => 'required|string|max:255',
-            'is_completed' => 'required|boolean',
-            'user_id' => 'required|exists:users,id',
-        ]);
-    }
+
 }
