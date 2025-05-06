@@ -48,5 +48,9 @@ docker compose exec api php artisan migrate
 ```bash
 docker compose exec api php artisan queue:work
 ```
+to run the test
+```bash
+docker compose exec api php artisan test
+```
 
 
