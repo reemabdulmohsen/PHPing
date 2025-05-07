@@ -5,7 +5,8 @@ But we didn’t stop there. Every week, you will get an AI-generated roast email
 
 ### 📬 RoastBot once said...
 
-> Congratulations on completing... absolutely nothing! At this rate, you’re on track to become the world champion of procrastination. If they gave out medals for sitting around, you’d have a gold medal! 
+> Congratulations on completing... absolutely nothing! At this rate, you’re on track to become the world champion of procrastination. If they gave out medals for sitting around, you’d have a gold medal!
+> 
 > — RoastBot 🤖
 
 ## 🚀 Features
